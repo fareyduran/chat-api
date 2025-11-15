@@ -16,6 +16,11 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "paths": {
+      "@users/*": [
+        "src/contexts/users/*"
+      ],
+    },
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,

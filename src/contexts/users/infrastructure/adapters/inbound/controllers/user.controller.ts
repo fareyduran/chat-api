@@ -9,7 +9,6 @@ export class UserController {
 
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
   ) { }
 
   @Post('/login')

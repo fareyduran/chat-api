@@ -3,11 +3,11 @@ import { CommandHandler } from "@nestjs/cqrs";
 import { Room } from "@rooms/domain/entities/rooms.entity";
 import type { RoomRepository } from "@rooms/domain/ports/room-repository.port";
 import type { UserRepository } from "@users/domain/ports/user-respository.port";
-import { AssignPartisipantCommand } from "@rooms/application/commands/assign-partisipant.command";
+import { AssignParticipantCommand } from "@rooms/application/commands/assign-participant.command";
 
-@CommandHandler(AssignPartisipantCommand)
-export class AssignPartisipantHandler {
-  private readonly logger = new Logger(AssignPartisipantHandler.name);
+@CommandHandler(AssignParticipantCommand)
+export class AssignParticipantHandler {
+  private readonly logger = new Logger(AssignParticipantHandler.name);
   constructor(
     @Inject('RoomRepository')
     private readonly roomRepository: RoomRepository,
@@ -15,7 +15,7 @@ export class AssignPartisipantHandler {
     private readonly userRepository: UserRepository,
   ) { }
 
-  async execute(command: AssignPartisipantCommand): Promise<Room> {
+  async execute(command: AssignParticipantCommand): Promise<Room> {
     const { roomId, newParticipantId } = command;
     this.logger.log(`Assigning participant: ${newParticipantId} to room: ${roomId}`);
 

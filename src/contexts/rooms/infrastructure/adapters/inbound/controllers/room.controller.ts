@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Logger, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { RoomResponseDto } from "@rooms/infrastructure/adapters/inbound/dtos/room-response.dto";
 import { CreateRoomDto } from "@rooms/infrastructure/adapters/inbound/dtos/create-room.dto";
 import { CreateRoomCommand } from "@rooms/application/commands/create-room.command";
 import { GetRoomsQuery } from "@rooms/application/queries/get-rooms.query";
-import { AssignPartisipantCommand } from "@rooms/application/commands/assign-partisipant.command";
+import { AssignParticipantCommand } from "@rooms/application/commands/assign-participant.command";
 import { AssignParticipantDto } from "@rooms/infrastructure/adapters/inbound/dtos/assign-participant.dto";
+import { RemoveParticipantCommand } from "@rooms/application/commands/remove-participant.command";
 
 @Controller('/rooms')
 export class RoomController {
@@ -35,16 +36,32 @@ export class RoomController {
     return { rooms: roomDtos };
   }
 
-  @Put('participant')
+  @Put(':roomId/participant')
   async assignParticipant(
+    @Param('roomId') roomId: string,
     @Body() body: AssignParticipantDto,
+
   ): Promise<{ message: string }> {
     await this.commandBus.execute(
-      new AssignPartisipantCommand(body.roomId, body.participantId)
+      new AssignParticipantCommand(roomId, body.participantId)
     );
 
     return {
       message: 'Participant assigned successfully',
+    }
+  }
+
+  @Delete(':roomId/participant/:id')
+  async removeParticipant(
+    @Param('roomId') roomId: string,
+    @Param('id') participantId: string,
+  ): Promise<{ message: string }> {
+    await this.commandBus.execute(
+      new RemoveParticipantCommand(roomId, participantId)
+    );
+
+    return {
+      message: 'Participant removed successfully',
     }
   }
 }

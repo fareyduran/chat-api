@@ -6,14 +6,16 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { RoomSchema, RoomSchemaClass } from "@rooms/infrastructure/adapters/outbound/persistence/schemas/room.schema";
 import { UsersModule } from "@users/users.module";
 import { GetRoomsHandler } from "@rooms/application/handlers/get-rooms.handler";
-import { AssignPartisipantHandler } from "@rooms/application/handlers/assign-participant.handler";
+import { AssignParticipantHandler } from "@rooms/application/handlers/assign-participant.handler";
+import { RemoveParticipantHanlder } from "./application/handlers/remove-participant.handler";
 
 const CONTROLLERS = [RoomController]
 
 const HANDLERS = [
   CreateRoomHandler,
   GetRoomsHandler,
-  AssignPartisipantHandler
+  AssignParticipantHandler,
+  RemoveParticipantHanlder,
 ]
 
 const REPOSITORIES = {

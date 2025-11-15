@@ -20,6 +20,9 @@
       "@users/*": [
         "src/contexts/users/*"
       ],
+      "@rooms/*": [
+        "src/contexts/rooms/*"
+      ],
     },
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,

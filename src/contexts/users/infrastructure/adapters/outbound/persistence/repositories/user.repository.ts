@@ -23,4 +23,12 @@ export class MongooseUserRepository implements UserRepository {
     }
     return UserMapper.toDomain(userSchema);
   }
+
+  async findById(id: string): Promise<User | null> {
+    const userSchema = await this.userModel.findById(id).exec();
+    if (!userSchema) {
+      return null;
+    }
+    return UserMapper.toDomain(userSchema);
+  }
 }

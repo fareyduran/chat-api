@@ -1,0 +1,6 @@
+import { Message } from "@messages/domain/entities/message.entity";
+
+export interface MessageRepository {
+  save(message: Message): Promise<Message>;
+  findByRoomId(roomId: string): Promise<Message[]>;
+}

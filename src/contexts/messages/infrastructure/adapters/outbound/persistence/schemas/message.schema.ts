@@ -21,9 +21,6 @@ export class MessageSchema {
 
   @Prop({ required: true })
   sentAt: Date;
-
-  @Prop({ required: true })
-  createdAt: Date;
 }
 
 export const MessageSchemaClass = SchemaFactory.createForClass(MessageSchema);

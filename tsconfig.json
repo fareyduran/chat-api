@@ -23,6 +23,9 @@
       "@rooms/*": [
         "src/contexts/rooms/*"
       ],
+      "@messages/*": [
+        "src/contexts/messages/*"
+      ],
     },
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,

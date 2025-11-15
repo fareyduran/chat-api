@@ -1,13 +1,15 @@
+import { MessagesModule } from '@messages/messages.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RoomModule } from '@rooms/rooms.module';
+import { RoomsModule } from '@rooms/rooms.module';
 import { UsersModule } from '@users/users.module';
 
 const MODULES = [
   UsersModule,
-  RoomModule,
+  RoomsModule,
+  MessagesModule
 ]
 
 @Module({

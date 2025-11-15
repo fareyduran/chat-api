@@ -40,4 +40,4 @@ const REPOSITORIES_PROVIDERS = [
   providers: [...HANDLERS, ...REPOSITORIES_PROVIDERS],
   exports: [REPOSITORIES.RoomRepository],
 })
-export class RoomModule { }
+export class RoomsModule { }

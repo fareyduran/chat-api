@@ -1,13 +1,12 @@
 import { BadRequestException, Inject, Logger } from "@nestjs/common";
-import { CommandHandler } from "@nestjs/cqrs";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateRoomCommand } from "@rooms/application/commands/create-room.command";
 import { Room } from "@rooms/domain/entities/rooms.entity";
 import type { RoomRepository } from "@rooms/domain/ports/room-repository.port";
 import type { UserRepository } from "@users/domain/ports/user-respository.port";
-import { create } from "domain";
 
 @CommandHandler(CreateRoomCommand)
-export class CreateRoomHandler {
+export class CreateRoomHandler implements ICommandHandler<CreateRoomCommand> {
   private readonly logger = new Logger(CreateRoomHandler.name);
   constructor(
     @Inject('RoomRepository')

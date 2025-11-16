@@ -17,7 +17,7 @@ export class MongooseUserRepository implements UserRepository {
   }
 
   async findByName(name: string): Promise<User | null> {
-    const userSchema = await this.userModel.findOne({ name }).exec();
+    const userSchema = await this.userModel.findOne({ name: { $regex: new RegExp(name, 'i') } }).exec();
     if (!userSchema) {
       return null;
     }

@@ -31,6 +31,20 @@ export class MongooseRoomRepository implements RoomRepository {
     };
   }
 
+  async findByUserId(id: string, page: number, limit: number): Promise<{ rooms: Room[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    const [rooms, total] = await Promise.all([
+      this.roomModel.find({ participants: id }).skip(skip).limit(limit).exec(),
+      this.roomModel.countDocuments({ participants: id }).exec(),
+    ]);
+
+    return {
+      rooms: rooms.map(RoomMapper.toDomain),
+      total,
+    };
+  }
+
   async updateParticipants(roomId: string, participants: string[]): Promise<Room> {
     const updatedRoom = await this.roomModel.findByIdAndUpdate(
       roomId,

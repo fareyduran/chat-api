@@ -8,12 +8,14 @@ import { UsersModule } from "@users/users.module";
 import { GetRoomsHandler } from "@rooms/application/handlers/get-rooms.handler";
 import { AssignParticipantHandler } from "@rooms/application/handlers/assign-participant.handler";
 import { RemoveParticipantHanlder } from "./application/handlers/remove-participant.handler";
+import { GetRoomsByUserIdHandler } from "./application/handlers/get-rooms-by-user-id.handler";
 
 const CONTROLLERS = [RoomController]
 
 const HANDLERS = [
   CreateRoomHandler,
   GetRoomsHandler,
+  GetRoomsByUserIdHandler,
   AssignParticipantHandler,
   RemoveParticipantHanlder,
 ]

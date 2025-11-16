@@ -8,6 +8,7 @@ import { AssignParticipantCommand } from "@rooms/application/commands/assign-par
 import { AssignParticipantDto } from "@rooms/infrastructure/adapters/inbound/dtos/assign-participant.dto";
 import { RemoveParticipantCommand } from "@rooms/application/commands/remove-participant.command";
 import { PaginatedResponse, PaginationDto } from "@rooms/infrastructure/adapters/inbound/dtos/pagination.dto";
+import { GetRoomsByUserIdQuery } from "@rooms/application/queries/get-rooms-by-user-id.query";
 
 @Controller('/rooms')
 export class RoomController {
@@ -35,6 +36,32 @@ export class RoomController {
 
     const { rooms, total } = await this.queryBus.execute(
       new GetRoomsQuery(page, limit)
+    );
+
+    const roomDtos = rooms.map(room => RoomResponseDto.fromDomain(room));
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: roomDtos,
+      metadata: {
+        page,
+        limit,
+        total,
+        totalPages,
+      },
+    };
+  }
+
+  @Get('users/:userId')
+  async getRoomsByUser(
+    @Param('userId') userId: string,
+    @Query() paginationDto: PaginationDto
+  ): Promise<PaginatedResponse<RoomResponseDto>> {
+    const { page = 1, limit = 10 } = paginationDto;
+    this.logger.log(`Fetching rooms for user: ${userId} - page: ${page}, limit: ${limit}`);
+
+    const { rooms, total } = await this.queryBus.execute(
+      new GetRoomsByUserIdQuery(userId, page, limit)
     );
 
     const roomDtos = rooms.map(room => RoomResponseDto.fromDomain(room));

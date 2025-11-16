@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { RoomResponseDto } from "@rooms/infrastructure/adapters/inbound/dtos/room-response.dto";
 import { CreateRoomDto } from "@rooms/infrastructure/adapters/inbound/dtos/create-room.dto";
@@ -7,6 +7,7 @@ import { GetRoomsQuery } from "@rooms/application/queries/get-rooms.query";
 import { AssignParticipantCommand } from "@rooms/application/commands/assign-participant.command";
 import { AssignParticipantDto } from "@rooms/infrastructure/adapters/inbound/dtos/assign-participant.dto";
 import { RemoveParticipantCommand } from "@rooms/application/commands/remove-participant.command";
+import { PaginatedResponse, PaginationDto } from "@rooms/infrastructure/adapters/inbound/dtos/pagination.dto";
 
 @Controller('/rooms')
 export class RoomController {
@@ -28,12 +29,26 @@ export class RoomController {
   }
 
   @Get('')
-  async getRooms(): Promise<{ rooms: RoomResponseDto[] }> {
-    this.logger.log(`Fetching all rooms`);
-    const rooms = await this.queryBus.execute(new GetRoomsQuery());
-    const roomDtos = rooms.map(room => RoomResponseDto.fromDomain(room));
+  async getRooms(@Query() paginationDto: PaginationDto): Promise<PaginatedResponse<RoomResponseDto>> {
+    const { page = 1, limit = 10 } = paginationDto;
+    this.logger.log(`Fetching rooms - page: ${page}, limit: ${limit}`);
 
-    return { rooms: roomDtos };
+    const { rooms, total } = await this.queryBus.execute(
+      new GetRoomsQuery(page, limit)
+    );
+
+    const roomDtos = rooms.map(room => RoomResponseDto.fromDomain(room));
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: roomDtos,
+      metadata: {
+        page,
+        limit,
+        total,
+        totalPages,
+      },
+    };
   }
 
   @Put(':roomId/participant')

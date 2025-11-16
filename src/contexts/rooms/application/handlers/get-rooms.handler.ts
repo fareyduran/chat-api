@@ -10,7 +10,7 @@ export class GetRoomsHandler implements IQueryHandler<GetRoomsQuery> {
     @Inject('RoomRepository') private readonly roomRepository: RoomRepository,
   ) { }
 
-  async execute(query: GetRoomsQuery): Promise<Room[]> {
-    return this.roomRepository.findAll();
+  async execute(query: GetRoomsQuery): Promise<{ rooms: Room[]; total: number }> {
+    return this.roomRepository.findAll(query.page, query.limit);
   }
 }

@@ -16,9 +16,30 @@ export class MongooseMessageRepository implements MessageRepository {
     return MessageMapper.toDomain(createdMessage);
   }
 
-  async findByRoomId(roomId: string): Promise<Message[]> {
-    const messages = await this.messageModel.find({ roomId }).exec();
+  async findByRoomId(
+    roomId: string,
+    cursor?: string,
+    limit: number = 30
+  ): Promise<{ messages: Message[]; hasMore: boolean }> {
+    const query: any = { roomId };
 
-    return messages.map(MessageMapper.toDomain);
+    if (cursor) {
+      const cursorDate = new Date(cursor);
+      query.sentAt = { $lt: cursorDate };
+    }
+
+    const messages = await this.messageModel
+      .find(query)
+      .sort({ sentAt: -1 })
+      .limit(limit + 1)
+      .exec();
+
+    const hasMore = messages.length > limit;
+    const resultMessages = hasMore ? messages.slice(0, limit) : messages;
+
+    return {
+      messages: resultMessages.map(MessageMapper.toDomain),
+      hasMore,
+    };
   }
 }

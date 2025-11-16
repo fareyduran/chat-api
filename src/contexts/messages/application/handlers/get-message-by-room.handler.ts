@@ -14,13 +14,13 @@ export class GetMessagesByRoomHandler implements IQueryHandler<GetMessagesByRoom
   ) { }
 
   async execute(query: GetMessagesByRoomQuery) {
-    const { roomId } = query;
+    const { roomId, cursor, limit } = query;
 
     const room = await this.roomRepository.findById(roomId);
     if (!room) {
       throw new Error(`Room ${roomId} not found.`);
     }
 
-    return this.messageRepository.findByRoomId(roomId);
+    return this.messageRepository.findByRoomId(roomId, cursor, limit);
   }
 }  

@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Logger, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Logger, Param, Post, Query } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { CreateMessageDto } from "@messages/infrastructure/adapters/inbound/dto/create-message.dto";
 import { MessageResponseDto } from "@messages/infrastructure/adapters/inbound/dto/message-response.dto";
 import { CreateMessageCommand } from "@messages/application/commands/create-message.command";
 import { GetMessagesByRoomQuery } from "@messages/application/queries/get-message-by-room.query";
+import { CursorPaginatedResponse, CursorPaginationDto } from "@messages/infrastructure/adapters/inbound/dto/cursor-pagination.dto";
 
 @Controller('/messages')
 export class MessageController {
@@ -25,11 +26,30 @@ export class MessageController {
   }
 
   @Get('rooms/:roomId')
-  async getMessagesByRoom(@Param('roomId') roomId: string): Promise<{ messages: MessageResponseDto[] }> {
-    this.logger.log(`Fetching messages for room: ${roomId}`);
-    const messages = await this.queryBus.execute(new GetMessagesByRoomQuery(roomId));
+  async getMessagesByRoom(
+    @Param('roomId') roomId: string,
+    @Query() paginationDto: CursorPaginationDto
+  ): Promise<CursorPaginatedResponse<MessageResponseDto>> {
+    const { cursor, limit = 30 } = paginationDto;
+    this.logger.log(`Fetching messages for room: ${roomId}, cursor: ${cursor}, limit: ${limit}`);
+
+    const { messages, hasMore } = await this.queryBus.execute(
+      new GetMessagesByRoomQuery(roomId, cursor, limit)
+    );
+
     const messageDtos = messages.map(message => MessageResponseDto.fromDomain(message));
 
-    return { messages: messageDtos };
+    const nextCursor = messageDtos.length > 0
+      ? messageDtos[messageDtos.length - 1].sentAt.toISOString()
+      : null;
+
+    return {
+      data: messageDtos,
+      pageInfo: {
+        hasMoreMessages: hasMore,
+        nextCursor,
+        count: messageDtos.length,
+      },
+    };
   }
 }

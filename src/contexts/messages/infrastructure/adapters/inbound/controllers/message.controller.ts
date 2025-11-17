@@ -44,7 +44,7 @@ export class MessageController {
       : null;
 
     return {
-      data: messageDtos,
+      data: messageDtos.reverse(),
       pageInfo: {
         hasMoreMessages: hasMore,
         nextCursor,

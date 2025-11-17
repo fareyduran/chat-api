@@ -1,5 +1,26 @@
 # Chat API
 
+## Características
+
+- ✅ API REST para gestión de usuarios, salas y mensajes
+- ✅ WebSocket en tiempo real para notificaciones de mensajes
+- ✅ Arquitectura Hexagonal con DDD y CQRS
+- ✅ MongoDB como base de datos
+- ✅ Docker para desarrollo
+
+## WebSockets
+
+Esta API incluye soporte para WebSockets usando Socket.IO para notificaciones en tiempo real de mensajes.
+
+**Documentación completa**: Ver [WEBSOCKET_DOCUMENTATION.md](./WEBSOCKET_DOCUMENTATION.md)
+
+**Endpoint WebSocket**: `ws://localhost:3000/messages`
+
+**Eventos principales**:
+- `joinRoom`: Unirse a una sala para recibir notificaciones
+- `leaveRoom`: Salir de una sala
+- `newMessage`: Recibir notificación cuando se crea un mensaje
+
 ## Cómo ejecutar la aplicación
 
 ### Opción 1: Con Docker (Recomendado)

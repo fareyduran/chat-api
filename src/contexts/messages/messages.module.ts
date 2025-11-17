@@ -7,6 +7,7 @@ import { RoomsModule } from "@rooms/rooms.module";
 import { MessageController } from "./infrastructure/adapters/inbound/controllers/message.controller";
 import { CreateMessageHandler } from "./application/handlers/create-message.handler";
 import { GetMessagesByRoomHandler } from "./application/handlers/get-message-by-room.handler";
+import { MessageGateway } from "./infrastructure/adapters/inbound/gateways/message.gateway";
 
 const CONTROLLERS = [
   MessageController
@@ -15,6 +16,10 @@ const CONTROLLERS = [
 const HANDLERS = [
   GetMessagesByRoomHandler,
   CreateMessageHandler,
+]
+
+const GATEWAYS = [
+  MessageGateway
 ]
 
 const REPOSITORIES = {
@@ -37,7 +42,7 @@ const REPOSITORIES_PROVIDERS = [
     RoomsModule,
   ],
   controllers: [...CONTROLLERS],
-  providers: [...HANDLERS, ...REPOSITORIES_PROVIDERS],
+  providers: [...HANDLERS, ...REPOSITORIES_PROVIDERS, ...GATEWAYS],
   exports: [REPOSITORIES.MessageRepository],
 })
 export class MessagesModule { }

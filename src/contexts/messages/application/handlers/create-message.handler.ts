@@ -5,6 +5,8 @@ import type { RoomRepository } from "@rooms/domain/ports/room-repository.port";
 import type { UserRepository } from "@users/domain/ports/user-respository.port";
 import type { MessageRepository } from "@messages/domain/ports/message-repository.port";
 import { Message } from "@messages/domain/entities/message.entity";
+import { MessageGateway } from "@messages/infrastructure/adapters/inbound/gateways/message.gateway";
+import { MessageResponseDto } from "@messages/infrastructure/adapters/inbound/dto/message-response.dto";
 
 @CommandHandler(CreateMessageCommand)
 export class CreateMessageHandler implements ICommandHandler<CreateMessageCommand> {
@@ -17,6 +19,7 @@ export class CreateMessageHandler implements ICommandHandler<CreateMessageComman
     private readonly userRepository: UserRepository,
     @Inject('MessageRepository')
     private readonly messageRepository: MessageRepository,
+    private readonly messageGateway: MessageGateway,
   ) { }
 
   async execute(command: CreateMessageCommand) {
@@ -44,7 +47,11 @@ export class CreateMessageHandler implements ICommandHandler<CreateMessageComman
     const messageToCreate = Message.create(roomId, senderId, author.getName(), message);
 
     try {
-      return await this.messageRepository.save(messageToCreate);
+      const createdMessage = await this.messageRepository.save(messageToCreate);
+      const messageDto = MessageResponseDto.fromDomain(createdMessage);
+      this.messageGateway.notifyNewMessage(roomId, messageDto);
+
+      return createdMessage;
     } catch (error) {
       this.logger.error(`Error creating message in room ${roomId}: ${error.message}`);
       throw new BadRequestException('Could not create message...');

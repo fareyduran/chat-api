@@ -23,6 +23,16 @@ Esta API incluye soporte para WebSockets usando Socket.IO para notificaciones en
 
 ## Cómo ejecutar la aplicación
 
+### Configuración inicial
+
+**Importante:** Antes de ejecutar la aplicación, debes crear un archivo `.env` en la raíz del proyecto basado en el archivo `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Luego, edita el archivo `.env` con los valores correspondientes a tu entorno.
+
 ### Opción 1: Con Docker (Recomendado)
 
 La primera vez que ejecutes la aplicación, usa:

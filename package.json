@@ -78,6 +78,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@users/(.*)$": "<rootDir>/contexts/users/$1",
+      "^@rooms/(.*)$": "<rootDir>/contexts/rooms/$1",
+      "^@messages/(.*)$": "<rootDir>/contexts/messages/$1"
+    }
   }
 }

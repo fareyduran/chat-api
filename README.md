@@ -57,6 +57,12 @@ npm run start
 MONGODB_URI=mongodb://localhost:27017/chat-db
 ```
 
+### Nota sobre el Frontend
+
+**Importante:** Este proyecto solo incluye el backend de la aplicación. Para probar la funcionalidad completa (WebSockets, interfaz de usuario, etc.), debes levantar el frontend de forma independiente.
+
+El frontend se encuentra en un repositorio separado y debe ejecutarse en paralelo con este backend.
+
 ## Arquitectura
 
 Esta aplicación está construida siguiendo los principios de **Arquitectura Hexagonal (Ports and Adapters)**, **Domain-Driven Design (DDD)** y **CQRS (Command Query Responsibility Segregation)**.
